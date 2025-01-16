@@ -33,6 +33,7 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/assets",
               {
                 "glob": "**/*",
                 "input": "public"
@@ -41,7 +42,13 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/jquery.min.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/js/slick.min.js",
+              "src/assets/js/nouislider.min.js",
+              "src/assets/js/jquery.zoom.min.js"
+            ]
           },
           "configurations": {
             "production": {
