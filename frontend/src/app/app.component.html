@@ -1,3 +1,57 @@
-<mg-header></mg-header>
-<router-outlet></router-outlet>
-<mg-footer></mg-footer>
+<div class="alertbox" *ngIf="showAlert"><span class="material-symbols-outlined">check_circle</span><p>{{alertMsg}}</p></div>
+<header class="shop-header">
+     <div class="logo"><h1>e-shop</h1></div>
+     <div class="search">
+          <input type="text" name="search" id="search" [placeholder]="searchPlaceholder" [(ngModel)]="searchPrompt" (input)="handleInput()">
+          <button type="button" *ngIf="enableClearBtn" (click)="clearSearch()"><span class="material-symbols-outlined">close</span></button>
+     </div>
+     <button type="button" *ngIf="selectedPage==='all'" (click)="changePage('checkout')"><span class="material-symbols-outlined">shopping_cart</span></button>
+     <button type="button" *ngIf="selectedPage==='checkout'" (click)="changePage('all')"><span class="material-symbols-outlined">arrow_back</span></button>
+</header>
+<section class="products-container" *ngIf="selectedPage==='all'">
+     <h2>All Products</h2>
+     <select name="sort" id="sort" (change)="handleChangeOptions()" [(ngModel)]="selectedSortOpt">
+          <option selected disabled>Sort By</option>
+          <option *ngFor="let opt of optionList" [value]="opt.value">{{opt.name}}</option>
+     </select>
+     <div class="product-list">
+          <div class="product-card" *ngFor="let prod of prodList;index as i">
+               <div class="product-img"><img [src]="prod.image" alt="product" width="270" height="270"></div>
+               <div class="product-info">
+                    <h3>{{prod.name}}</h3>
+                    <p class="category">{{prod.category | titlecase}}</p>
+                    <p>{{prod.price | currency}}</p>
+                    <button class="addBtn" (click)="addToCart(i)"><span class="material-symbols-outlined">add_shopping_cart</span>Add to Cart</button>
+               </div>
+          </div>
+     </div>
+</section>
+<section class="products-container" *ngIf="selectedPage==='checkout'">
+     <h2 *ngIf="prodOnCart.length">Product On Cart: {{prodOnCart.length}}</h2>
+     <h2 *ngIf="!prodOnCart.length">Your e-shop Cart is Empty</h2>
+     <div class="cart-details" *ngIf="prodOnCart.length">
+          <h3>Total: {{totalPrice | currency}}</h3>
+          <button class="checkout"><span class="material-symbols-outlined">shopping_cart_checkout</span> To Checkout</button>
+          <button class="clear"><span class="material-symbols-outlined" (click)="clearCart()">clear_all</span></button>
+     </div>
+     <div class="product-list">
+          <div class="product-card" *ngFor="let prod of prodOnCart;index as i">
+               <div class="product-img"><img [src]="prod.image" alt="product" width="250" height="250"></div>
+               <div class="product-info">
+                    <h3>{{prod.name}}</h3>
+                    <p class="category">{{prod.category | titlecase}}</p>
+                    <p>{{prod.price | currency}}</p>
+                    <p class="total">Total: {{prod.total | currency}}</p>
+                    <div class="inputNum">
+                         <button class="numBtn" (click)="increaseQty(i)"><span class="material-symbols-outlined">add</span></button>
+                         <input type="number" name="qty" [ngModel]="prod.qty" (change)="changeQty(i,$event)" [min]="1">
+                         <button class="numBtn" (click)="decreaseQty(i)"><span class="material-symbols-outlined">remove</span></button>
+                    </div>
+                    <button (click)="removeFromCart(i)"><span class="material-symbols-outlined">remove_shopping_cart</span>Remove From Cart</button>
+               </div>
+          </div>
+     </div>
+</section>
+<footer class="shop-footer">
+     <p>&copy; {{year}} Arsen Gabrielyan | {{"This is just a sample project" | titlecase}}</p>
+</footer>
