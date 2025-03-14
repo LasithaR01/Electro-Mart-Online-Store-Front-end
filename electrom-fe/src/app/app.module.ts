@@ -1,32 +1,43 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FooterComponent } from './components/footer/footer.component';
-import { HomeComponent } from './components/home/home.component';
-import { RegisterComponent } from './register/register.component';
-import { LoginComponent } from './components/login/login.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+import { JwtModule } from '@auth0/angular-jwt';
+
+// specify the key where the token is stored in the local storage
+export const LOCALSTORAGE_TOKEN_KEY = 'angular_material_login_and_register_example';
+
+// specify tokenGetter for the angular jwt package
+export function tokenGetter() {
+  return localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+}
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NavbarComponent,
-    FooterComponent,
-    HomeComponent,
-    RegisterComponent,
-    LoginComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule
+    HttpClientModule,
+    // Import our Routes for this module
+    AppRoutingModule,
+    // Angular Material Imports
+    MatSnackBarModule,
+    // Jwt Helper Module Import
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ['localhost:3000', 'localhost:8080']
+      }
+    })
   ],
-  providers: [
-    provideClientHydration(withEventReplay())
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
